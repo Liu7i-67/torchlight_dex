@@ -63,20 +63,82 @@ class _PactspiritPageState extends State<PactspiritPage> {
                       ),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                            crossAxisCount: 1,
                             crossAxisSpacing: 12,
                             mainAxisSpacing: 12,
                             childAspectRatio: 3 / 2,
                           ),
                       itemBuilder: (context, index) {
                         final item = listsFuture[index];
+                        String imagePath =
+                            'assets/images/pactspirit/${item.key}.webp';
                         return Card(
                           elevation: 3,
-                          child: Center(
-                            child: Text(
-                              item.name,
-                              style: const TextStyle(fontSize: 18),
-                            ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Image.asset(
+                                    imagePath,
+                                    fit: BoxFit.fitHeight,
+                                    // 使用默认背景色作为占位符
+                                    frameBuilder:
+                                        (
+                                          BuildContext context,
+                                          Widget child,
+                                          int? frame,
+                                          bool wasSynchronouslyLoaded,
+                                        ) {
+                                          if (wasSynchronouslyLoaded ||
+                                              frame != null) {
+                                            return child;
+                                          }
+                                          return Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        },
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.name,
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          item.tag,
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          item.rarity,
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Color(0xFFFF5722),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // 👇 新增：渲染 modifier 内容（纯文本）
+                                    ...item.modifier.map((line) {
+                                      // 拼接这一行的所有 content
+                                      final lineText = line
+                                          .map((part) => part.content)
+                                          .join('');
+                                      return Text(lineText);
+                                    }),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
