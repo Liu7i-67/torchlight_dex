@@ -1,63 +1,62 @@
 import 'package:flutter/material.dart';
 
-class DetailPage extends StatefulWidget {
-  const DetailPage({super.key});
+class DemoPage extends StatefulWidget {
+  const DemoPage({super.key});
 
   @override
-  State<DetailPage> createState() => _DetailPageState();
+  State<DemoPage> createState() => _DemoPageState();
 }
 
-class _DetailPageState extends State<DetailPage> {
-  int counter = 0;
+class _DemoPageState extends State<DemoPage> {
+  final ScrollController _scrollController = ScrollController();
+
+  void scrollToTop() {
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOut,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    // 接收路由参数
-    final args =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-
-    final id = args['id'];
-    final title = args['title'];
-
     return Scaffold(
-      appBar: AppBar(title: const Text("详情页")),
-      body: Center(
-        child: Column(
-          children: [
-            Text("ID: $id\n标题: $title"),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // 返回
-              },
-              child: const Text("返回"),
-            ),
-            const SizedBox(height: 20),
-            Text("计数器：$counter", style: TextStyle(fontSize: 26)),
-
-            const SizedBox(height: 30),
-            // 加一
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  counter++;
-                });
-              },
-              child: const Text("加 1"),
-            ),
-            const SizedBox(height: 10),
-
-            // 重置
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  counter = 0;
-                });
-              },
-              child: const Text("重置"),
-            ),
-          ],
-        ),
+      appBar: AppBar(title: const Text("Demo 页面")),
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: 50,
+        itemBuilder: (_, index) => ListTile(title: Text("项目 $index")),
       ),
+
+      // 用 Stack 实现多个浮动按钮
+      floatingActionButton: Stack(
+        children: [
+          // 左侧返回按钮
+          Positioned(
+            left: 20, // 这里不会再“贴边”
+            bottom: 20,
+            child: FloatingActionButton(
+              heroTag: "back_button", // 多按钮必填，防止 tag 冲突
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Icon(Icons.home),
+            ),
+          ),
+
+          // 右侧滚动到顶部按钮
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: FloatingActionButton(
+              heroTag: "top_button",
+              onPressed: scrollToTop,
+              child: const Icon(Icons.arrow_upward),
+            ),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

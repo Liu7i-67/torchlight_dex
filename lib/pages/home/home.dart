@@ -17,16 +17,6 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 20),
               Text('看看侧边栏'),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(
-                    context,
-                    '/detail',
-                    arguments: {'id': 123, "title": "查询"},
-                  );
-                },
-                child: const Text("进入详情页"),
-              ),
             ],
           ),
         ),

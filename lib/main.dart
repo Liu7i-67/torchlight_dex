@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:torchlight_dex/pages/changelog/changelog.dart';
-import 'package:torchlight_dex/pages/detail/detail.dart';
 import 'package:torchlight_dex/pages/home/home.dart';
 import 'package:torchlight_dex/pages/pactspirit/pactspirit.dart';
 
@@ -19,7 +18,6 @@ class MainApp extends StatelessWidget {
       routes: {
         '/': (context) => HomePage(),
         '/pactspirit': (context) => PactspiritPage(),
-        '/detail': (context) => DetailPage(),
         '/changelog': (context) => ChangeLogPage(),
       },
     );
