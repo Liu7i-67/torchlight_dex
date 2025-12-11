@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Text(
-                    '版本号 0.0.2',
+                    '版本号 0.0.3',
                     style: TextStyle(color: Colors.grey[600]),
                   ),
                 ),

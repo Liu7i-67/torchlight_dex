@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:torchlight_dex/components/backToHome/back_to_home.dart';
 import 'package:torchlight_dex/components/staticAccordion.dart';
 
 class ChangeLogPage extends StatefulWidget {
@@ -13,11 +12,16 @@ class _ChangeLogPageState extends State<ChangeLogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("更新日志")),
       body: ListView(
         children: [
           StaticAccordion(
             initialIndex: 0,
             items: [
+              AccordionItem(
+                title: "v0.0.3    2025-12-11",
+                contents: ["移除更新日志页面的返回首页按钮组件，改用标题返回形式"],
+              ),
               AccordionItem(
                 title: "v0.0.2    2025-12-11",
                 contents: [
@@ -36,7 +40,6 @@ class _ChangeLogPageState extends State<ChangeLogPage> {
           ),
         ],
       ),
-      floatingActionButton: const BackHomeButton(),
     );
   }
 }
