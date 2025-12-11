@@ -1,8 +1,6 @@
-# torchlight_dex
+# 火炬百科柒 torchlight_dex
 
-火炬之光图鉴
-
-A new Flutter project.
+一个火炬之光无限的本地百科APP
 
 ## 打包
 

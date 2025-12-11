@@ -1,7 +1,7 @@
 name: torchlight_dex
-description: "A new Flutter project."
+description: "一个火炬之光无限的本地百科APP"
 publish_to: "none"
-version: 0.0.1
+version: 0.0.2
 
 environment:
   sdk: ^3.10.3
@@ -14,9 +14,11 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: "^0.14.1"
 
 flutter:
   uses-material-design: true
   assets:
     - assets/data/pactspirit_list.json
     - assets/images/pactspirit/
+    - assets/icon/icon.png

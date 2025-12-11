@@ -13,6 +13,7 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Image.asset('assets/icon/icon.png'),
               Text('欢迎使用'),
               const SizedBox(height: 20),
               Text('看看侧边栏'),
