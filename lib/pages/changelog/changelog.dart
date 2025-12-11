@@ -20,7 +20,7 @@ class _ChangeLogPageState extends State<ChangeLogPage> {
             items: [
               AccordionItem(
                 title: "v0.0.2    2025-12-11",
-                contents: ["完善了契灵信息的展示样式"],
+                contents: ["完善了契灵信息的展示样式", '支持搜索契灵信息', '支持根据稀有度和标签去搜索契灵'],
               ),
               AccordionItem(
                 title: "v0.0.1    2025-12-10",

@@ -1,10 +1,29 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:torchlight_dex/components/backToHome/back_to_home.dart';
 import 'package:torchlight_dex/components/scrollToTopButton/scroll_to_top_button.dart';
 import 'package:torchlight_dex/pages/pactspirit/pactspirit_item_model.dart';
 import 'package:torchlight_dex/pages/pactspirit/pactspirit_list_item.dart';
+import 'package:torchlight_dex/pages/pactspirit/pactspirit_filter_drawer.dart';
+
+String _extractSearchableText(PactspiritItemModel item) {
+  final texts = <String>[item.name, item.tag, item.rarity, item.desc];
+
+  // 遍历所有 modifier 行
+  for (final line in item.modifier) {
+    for (final part in line) {
+      // 添加 content（必填）
+      texts.add(part.content);
+      // 添加 tips（可选）
+      if (part.tips != null) {
+        texts.add(part.tips!);
+      }
+    }
+  }
+
+  return texts.join(' '); // 用空格连接，避免跨字段粘连（如 "火灵" + "攻击" → "火灵 攻击"）
+}
 
 class PactspiritPage extends StatefulWidget {
   const PactspiritPage({super.key});
@@ -15,10 +34,13 @@ class PactspiritPage extends StatefulWidget {
 
 class _PactspiritPageState extends State<PactspiritPage> {
   List<PactspiritItemModel> listsFuture = [];
-  List<PactspiritItemModel> _filteredLists = []; // 👈 过滤后的列表
-  final TextEditingController _searchController =
-      TextEditingController(); // 👈 搜索控制器
+  List<PactspiritItemModel> _filteredLists = [];
+  final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  String? _selectedTag;
+  String? _selectedRarity;
+  Set<String> _allTags = {};
+  Set<String> _allRarities = {};
 
   // 加载 JSON
   Future<void> loadList() async {
@@ -29,22 +51,54 @@ class _PactspiritPageState extends State<PactspiritPage> {
     final loadedList = jsonList
         .map((j) => PactspiritItemModel.fromJson(j))
         .toList();
+    // 提取所有唯一 tag 和 rarity
+    final tags = <String>{};
+    final rarities = <String>{};
+    for (final item in loadedList) {
+      tags.add(item.tag);
+      rarities.add(item.rarity);
+    }
     setState(() {
       listsFuture = loadedList;
       _filteredLists = loadedList;
+      _allTags = tags;
+      _allRarities = rarities;
     });
   }
 
-  void _onSearchChanged(String query) {
+  void _applyFilters({String? searchQuery}) {
+    String queryLower = (searchQuery ?? '').toLowerCase();
+
     final filtered = listsFuture.where((item) {
-      final nameLower = item.name.toLowerCase();
-      final queryLower = query.toLowerCase();
-      return nameLower.contains(queryLower);
+      final searchableText = _extractSearchableText(item).toLowerCase();
+      // 搜索匹配
+      bool matchesSearch = searchableText.contains(queryLower);
+
+      // Tag 匹配（如果未选择，则视为通过）
+      bool matchesTag = _selectedTag == null || item.tag == _selectedTag;
+
+      // Rarity 匹配
+      bool matchesRarity =
+          _selectedRarity == null || item.rarity == _selectedRarity;
+
+      return matchesSearch && matchesTag && matchesRarity;
     }).toList();
 
     setState(() {
       _filteredLists = filtered;
     });
+  }
+
+  void _onSearchChanged(String query) {
+    _applyFilters(searchQuery: query);
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _selectedTag = null;
+      _selectedRarity = null;
+    });
+    _applyFilters(searchQuery: _searchController.text);
   }
 
   @override
@@ -77,6 +131,27 @@ class _PactspiritPageState extends State<PactspiritPage> {
           ).textTheme.titleMedium?.copyWith(color: Colors.black),
         ),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      ),
+      endDrawer: PactspiritFilterDrawer(
+        selectedTag: _selectedTag,
+        selectedRarity: _selectedRarity,
+        allTags: _allTags,
+        allRarities: _allRarities,
+        onTagSelected: (value) {
+          setState(() {
+            _selectedTag = value;
+          });
+          _applyFilters(searchQuery: _searchController.text);
+        },
+        onRaritySelected: (value) {
+          setState(() {
+            _selectedRarity = value;
+          });
+          _applyFilters(searchQuery: _searchController.text);
+        },
+        onResetFilters: () {
+          _resetFilters(); // 它内部已调用 setState 和 _applyFilters
+        },
       ),
       body: Stack(
         children: [
