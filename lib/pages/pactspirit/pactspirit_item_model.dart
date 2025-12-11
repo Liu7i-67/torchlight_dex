@@ -1,3 +1,5 @@
+import 'package:torchlight_dex/components/modifierLineWidget/modifier_model.dart';
+
 class PactspiritItemModel {
   final int index;
   final String name;
@@ -40,33 +42,6 @@ class PactspiritItemModel {
       rarity: json['rarity'],
       desc: json['desc'],
       modifier: modifier,
-    );
-  }
-}
-
-class ModifierPart {
-  final List<String> type; // 注意：type 可能是字符串或字符串数组，如 "text" 或 ["text-mod"]
-  final String content;
-  final String? tips; // 可选字段
-
-  ModifierPart({required this.type, required this.content, this.tips});
-
-  factory ModifierPart.fromJson(Map<String, dynamic> json) {
-    dynamic typeField = json['type'];
-
-    List<String> typeList;
-    if (typeField is String) {
-      typeList = [typeField];
-    } else if (typeField is List) {
-      typeList = (typeField).cast<String>();
-    } else {
-      typeList = ['unknown'];
-    }
-
-    return ModifierPart(
-      type: typeList,
-      content: json['content'] as String,
-      tips: json['tips'] as String?, // 安全处理可选字段
     );
   }
 }
