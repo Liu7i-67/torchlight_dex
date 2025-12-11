@@ -122,7 +122,7 @@ class _PactspiritPageState extends State<PactspiritPage> {
           controller: _searchController,
           onChanged: _onSearchChanged,
           decoration: const InputDecoration(
-            hintText: '搜索契约灵...',
+            hintText: '搜索契灵...',
             border: InputBorder.none,
             contentPadding: EdgeInsets.symmetric(vertical: 8),
           ),

@@ -45,24 +45,24 @@ class PactspiritFilterDrawer extends StatelessWidget {
               title: const Text('稀有度 (Rarity)'),
               subtitle: Text(selectedRarity ?? '未选择'),
             ),
-            RadioGroup<String>(
-              groupValue: selectedRarity,
-              onChanged: (String? value) {
-                onRaritySelected(value);
-                Navigator.pop(context);
-              },
-              child: Column(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 8,
                 children: [
                   for (final rarity in allRarities)
-                    RadioListTile<String>(
-                      title: Text(rarity),
-                      value: rarity,
-                      // groupValue 和 onChanged 由 RadioGroup 提供，无需重复
+                    ChoiceChip(
+                      label: Text(rarity),
+                      selected: selectedRarity == rarity,
+                      onSelected: (_) {
+                        onRaritySelected(rarity);
+                        Navigator.pop(context);
+                      },
                     ),
                 ],
               ),
             ),
-
             const Divider(),
 
             // Tag 筛选
@@ -70,16 +70,21 @@ class PactspiritFilterDrawer extends StatelessWidget {
               title: const Text('标签 (Tag)'),
               subtitle: Text(selectedTag ?? '未选择'),
             ),
-            RadioGroup<String>(
-              groupValue: selectedTag,
-              onChanged: (String? value) {
-                onTagSelected(value);
-                Navigator.pop(context);
-              },
-              child: Column(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Wrap(
+                spacing: 12,
+                runSpacing: 8,
                 children: [
                   for (final tag in allTags)
-                    RadioListTile<String>(title: Text(tag), value: tag),
+                    ChoiceChip(
+                      label: Text(tag),
+                      selected: selectedTag == tag,
+                      onSelected: (_) {
+                        onTagSelected(tag);
+                        Navigator.pop(context);
+                      },
+                    ),
                 ],
               ),
             ),
